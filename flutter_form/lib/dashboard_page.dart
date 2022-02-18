@@ -15,34 +15,6 @@ class dashboard extends StatefulWidget {
 
 class _dashboardState extends State<dashboard> {
 
-  //Map jsonTest = {'Nombres_utilisateurs' : '20'};
-  /**getData() async {
-    var responseGet = await http.get(
-        Uri.parse("http://127.0.0.1:5000/test"));
-
-    final decoded = json.decode(responseGet.body) as Map<String, dynamic>;
-
-    setState(() {
-      users = decoded["Nombres_utilisateurs"];
-    });
-  }**/
-
- /** decode() {
-    var json = jsonEncode(jsonTest);
-    final decoded = jsonDecode(json) as Map<String, dynamic>;
-    setState(() {
-      users = decoded["Nombres_utilisateurs"];
-    });
-  }**/
-
-  /**@override
-  void initState() {
-    // TODO: implement build
-    super.initState();
-    getData();
-    //decode();
-  }**/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
