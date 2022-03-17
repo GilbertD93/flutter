@@ -24,14 +24,13 @@ class FormScreen extends StatefulWidget {
 class FormScreenState extends State<FormScreen> {
 
   String date = DateTime.now().toString();
-  String _nbUsers = '10';
+  String _nbUsers = '10-50';
   String _template = '';
   String _goal = 'Ecommerce';
-  String _target = 'BtoB';
-  String _international = 'Oui';
-  String _response = 'Oui';
+  String _expUser = 'Oui';
+  String _creation = 'Interne';
   String _maintenance = 'Interne';
-  String getUser = '';
+  double price = 0.0;
 
   callback(varNbUsers){
     setState(() {
@@ -50,27 +49,21 @@ class FormScreenState extends State<FormScreen> {
     });
   }
 
-  callbackTarget(varTarget){
+  callbackCreation(varCreation){
     setState(() {
-      _target = varTarget;
-    });
-  }
-
-  callbackInternational(varInternational){
-    setState(() {
-      _international = varInternational;
-    });
-  }
-
-  callbackResponse(varResponse){
-    setState(() {
-      _response = varResponse;
+      _creation = varCreation;
     });
   }
 
   callbackMaintenance(varMaintenance){
     setState(() {
       _maintenance = varMaintenance;
+    });
+  }
+
+  callbackExpUser(varExpUser){
+    setState(() {
+      _expUser = varExpUser;
     });
   }
 
@@ -90,9 +83,8 @@ class FormScreenState extends State<FormScreen> {
           "Modele_application": _template,
           "Nombres_utilisateurs": _nbUsers,
           "But": _goal,
-          "Cible": _target,
-          "Visibilite_inter": _international,
-          "Temps_reponse_rapide": _response,
+          "Exp": _expUser,
+          "Creation": _creation,
           "Maintenance": _maintenance
         };
       }
@@ -117,14 +109,14 @@ class FormScreenState extends State<FormScreen> {
       final decoded = json.decode(response.body) as Map<String, dynamic>;
       //return decoded['Nombres_utilisateurs'];
       setState(() {
-        getUser = decoded['Nombres_utilisateurs'];
+        price = decoded['price'];
       });
     } catch(e) {
       print(e);
     }
   }
 
-  getData() async{
+/**  getData() async{
     var responseGet = await http.get(
         Uri.parse("http://127.0.0.1:5000/test"));
 
@@ -134,6 +126,31 @@ class FormScreenState extends State<FormScreen> {
       getUser = decoded["Nombres_utilisateurs"];
     });
 
+  }**/
+
+  PostId() async{
+    try {
+      Map jsonBody = {"id" : "QFlsHX8BytuWLXqXKR3P"};
+      var response = await http.post(
+          Uri.parse("http://127.0.0.1:5000/test"),
+          /**headers: {
+              "Access-Control-Allow-Origin": "*", // Required for CORS support to work
+              "Access-Control-Allow-Headers": "Origin,Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,locale",
+              "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+              "Content-Type": "application/json"
+              },**/
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode(jsonBody)
+      );
+
+      final decoded = json.decode(response.body) as Map<String, dynamic>;
+      //return decoded['Nombres_utilisateurs'];
+      setState(() {
+        price = decoded['unitPrice'];
+      });
+    } catch(e) {
+      print(e);
+    }
   }
 
 
@@ -151,9 +168,8 @@ class FormScreenState extends State<FormScreen> {
           "Modele_application": _template,
           "Nombres_utilisateurs": _nbUsers,
           "But": _goal,
-          "Cible": _target,
-          "Visibilite_inter": _international,
-          "Temps_reponse_rapide": _response,
+          "Exp": _expUser,
+          "Creation": _creation,
           "Maintenance": _maintenance
         },
       );
@@ -216,7 +232,7 @@ class FormScreenState extends State<FormScreen> {
                 Container(
                     margin: EdgeInsets.fromLTRB(0, 30, 0, 0),
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    height: 800,
+                    height: 900,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
                         color: Colors.white,
@@ -245,7 +261,7 @@ class FormScreenState extends State<FormScreen> {
                             const SizedBox(height:20),
                             buildTemplate(answer: _template, callbackFunction: callbackTemplate),
                             const SizedBox(height:20),
-                            if(_template == 'Site web') buildSiteQuestion(nbUsers: _nbUsers, goal: _goal, target: _target, international: _international, response: _response, maintenance: _maintenance, callbackUsers: callback, callbackGoal: callbackGoal, callbackTarget: callbackTarget, callbackInter: callbackInternational, callbackResponse: callbackResponse, callbackMaintenance: callbackMaintenance),
+                            if(_template == 'Site web') buildSiteQuestion(nbUsers: _nbUsers, goal: _goal, expUser: _expUser, creation: _creation, maintenance: _maintenance, callbackUsers: callback, callbackGoal: callbackGoal, callbackExpUser: callbackExpUser, callbackCreation: callbackCreation, callbackMaintenance: callbackMaintenance),
                             const SizedBox(height:50),
                             RaisedButton(
                               child: const Text(
@@ -264,12 +280,13 @@ class FormScreenState extends State<FormScreen> {
                                   //print(json.toString());
                                   //f.writeAsStringSync(json);
                                   await PostData();
+                                  //await PostId();
                                   //await Future.delayed(Duration(seconds: 3));
                                   //getData();
                                   Navigator.of(context)
                                       .push(
                                       MaterialPageRoute(
-                                          builder: (context) => dashboard(users: getUser,)
+                                          builder: (context) => dashboard(price: price)
                                       )
                                   );
                                   //sendData();
