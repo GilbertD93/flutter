@@ -20,8 +20,8 @@ class buildSiteQuestion extends StatefulWidget {
 }
 
 class _buildSiteQuestionState extends State<buildSiteQuestion> {
-  final List<String> users = ['10-50','50-1000','1000+'];
-  final List<String> listgoal = ['Ecommerce','Site vitrine','site base sur wordpress'];
+  final List<String> users = ['1-10000','10000-100000','100000-500000','500000+'];
+  final List<String> listgoal = ['Ecommerce','Site vitrine','Site base sur wordpress'];
   final List<bool> selectedExp = [true,false];
   final List<String> listcreation = ['Interne','Externe'];
   final List<String> listmaintenance = ['Interne','Externe'];

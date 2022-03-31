@@ -24,13 +24,15 @@ class FormScreen extends StatefulWidget {
 class FormScreenState extends State<FormScreen> {
 
   String date = DateTime.now().toString();
-  String _nbUsers = '10-50';
+  String _nbUsers = '1-10000';
   String _template = '';
   String _goal = 'Ecommerce';
   String _expUser = 'Oui';
   String _creation = 'Interne';
   String _maintenance = 'Interne';
-  double price = 0.0;
+  String price = '0.0';
+  Map decoded ={};
+  List<String> list = [];
 
   callback(varNbUsers){
     setState(() {
@@ -64,6 +66,12 @@ class FormScreenState extends State<FormScreen> {
   callbackExpUser(varExpUser){
     setState(() {
       _expUser = varExpUser;
+    });
+  }
+
+  callbackList(varList){
+    setState(() {
+      list = varList;
     });
   }
 
@@ -106,11 +114,20 @@ class FormScreenState extends State<FormScreen> {
           body: jsonEncode(jsonBody)
       );
 
-      final decoded = json.decode(response.body) as Map<String, dynamic>;
+      decoded = json.decode(response.body) as Map<String, dynamic>;
+
       //return decoded['Nombres_utilisateurs'];
       setState(() {
         price = decoded['price'];
+        decoded.forEach((k, v) {
+          if (k != 'price') {
+            list.add(v);
+          }
+
+        });
+        //list = list.reversed.toList();
       });
+      print(list);
     } catch(e) {
       print(e);
     }
@@ -272,6 +289,7 @@ class FormScreenState extends State<FormScreen> {
                                   fontSize:16,
                                 ),
                               ),
+
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
@@ -283,12 +301,15 @@ class FormScreenState extends State<FormScreen> {
                                   //await PostId();
                                   //await Future.delayed(Duration(seconds: 3));
                                   //getData();
-                                  Navigator.of(context)
+                                  await Navigator.of(context)
                                       .push(
                                       MaterialPageRoute(
-                                          builder: (context) => dashboard(price: price)
+                                          builder: (context) => dashboard(price: price, list: list)
                                       )
                                   );
+                                  setState(() {
+                                    list.clear();
+                                  });
                                   //sendData();
                                   //print(_nbUsers);
                                   //print(_template);
